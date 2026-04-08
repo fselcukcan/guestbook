@@ -24,6 +24,7 @@
                  [org.clojure/clojure "1.10.1"]
                  [org.clojure/tools.cli "1.0.194"]
                  [org.clojure/tools.logging "1.1.0"]
+                 [org.clojure/clojurescript "1.10.764" :scope "provided"]
                  [org.webjars.npm/bulma "0.9.1"]
                  [org.webjars.npm/material-icons "0.3.1"]
                  [org.webjars/webjars-locator "0.40"]
@@ -36,11 +37,28 @@
   
   :source-paths ["src/clj"]
   :test-paths ["test/clj"]
-  :resource-paths ["resources"]
+  :resource-paths ["resources" "target/cljsbuild"]
   :target-path "target/%s/"
   :main ^:skip-aot guestbook.core
 
-  :plugins [] 
+  :plugins [[lein-cljsbuild "1.1.8"]]
+
+  :cljsbuild
+  {:builds
+   {:apps {:source-paths ["src/cljs"]
+           :compiler {:output-to "target/cljsbuild/public/js/app.js"
+                      :output-dir "target/cljsbuild/public/js/out"
+                      :main "guestbook.core"
+                      :asset-path "/js/out"
+                      :optimizations :none
+                      :source-map true
+                      :pretty-print true}}}}
+
+  :clean-targets
+  ^{:protect false}
+  [:target-path
+   [:cljsbuild :builds :app :compiler :output-dir]
+   [:cljsbuild :builds :app :compiler :output-to]]
 
   :profiles
   {:uberjar {:omit-source true
