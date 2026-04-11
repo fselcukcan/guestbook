@@ -33,7 +33,8 @@
                  [ring/ring-core "1.8.2"]
                  [ring/ring-defaults "0.3.2"]
                  [selmer "1.12.31"]
-                 [reagent "1.0.0"]]
+                 [reagent "1.0.0"]
+                 [re-frame "1.1.2"]]
 
   :min-lein-version "2.0.0"
   
