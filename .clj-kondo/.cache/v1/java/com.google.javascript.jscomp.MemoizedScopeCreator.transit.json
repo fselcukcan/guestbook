@@ -1,1 +1,1 @@
-["^ ","~:members",["^ ","createScope",["~#set",[["^ ","~:flags",["^2",["~:method","~:public"]]]]],"hasBlockScope",["^2",[["^ ","^3",["^2",["^4","^5"]]]]]]]
+["^ ","~:members",["^ ","MemoizedScopeCreator",["~#set",[["^ ","~:flags",["^2",["~:method"]]]]],"createScope",["^2",[["^ ","^3",["^2",["^4","~:public"]]]]]]]
