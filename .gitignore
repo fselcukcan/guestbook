@@ -17,5 +17,3 @@ profiles.clj
 
 *_dev.db.*.db
 *_test.db.*.db
-
-/.shadow-cljs

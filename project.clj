@@ -3,14 +3,10 @@
   :description "FIXME: write description"
   :url "http://example.com/FIXME"
 
-  :dependencies [
-                 [net.java.dev.jna/jna "5.14.0"]
-                 [ch.qos.logback/logback-classic "1.2.3"]
+  :dependencies [[ch.qos.logback/logback-classic "1.2.3"]
                  [cheshire "5.10.0"]
                  [cljs-ajax "0.8.1"]
                  [clojure.java-time "0.3.2"]
-                 [com.google.javascript/closure-compiler-unshaded "v20200830"
-                  :scope "provided"]
                  [com.h2database/h2 "1.4.200"]
                  [conman "0.9.1"]
                  [cprop "0.1.17"]
@@ -31,9 +27,6 @@
                  [org.clojure/tools.cli "1.0.194"]
                  [org.clojure/tools.logging "1.1.0"]
                  [org.clojure/clojurescript "1.10.764" :scope "provided"]
-                 [org.clojure/google-closure-library "0.0-20191016-6ae1f72f"
-                  :scope "provided"]
-                 [thheller/shadow-cljs "2.11.14" :scope "provided"]
                  [org.webjars.npm/bulma "0.9.1"]
                  [org.webjars.npm/material-icons "0.3.1"]
                  [org.webjars/webjars-locator "0.40"]
@@ -46,13 +39,30 @@
 
   :min-lein-version "2.0.0"
   
-  :source-paths ["src/clj" "src/cljs" "src/cljc"]
+  :source-paths ["src/clj" "src/cljc"]
   :test-paths ["test/clj"]
   :resource-paths ["resources" "target/cljsbuild"]
   :target-path "target/%s/"
   :main ^:skip-aot guestbook.core
 
-  :plugins []
+  :plugins [[lein-cljsbuild "1.1.8"]]
+
+  :cljsbuild
+  {:builds
+   {:apps {:source-paths ["src/cljs" "src/cljc"]
+           :compiler {:output-to "target/cljsbuild/public/js/app.js"
+                      :output-dir "target/cljsbuild/public/js/out"
+                      :main "guestbook.core"
+                      :asset-path "/js/out"
+                      :optimizations :none
+                      :source-map true
+                      :pretty-print true}}}}
+
+  :clean-targets
+  ^{:protect false}
+  [:target-path
+   [:cljsbuild :builds :app :compiler :output-dir]
+   [:cljsbuild :builds :app :compiler :output-to]]
 
   :profiles
   {:uberjar {:omit-source true
@@ -65,15 +75,14 @@
    :test          [:project/dev :project/test :profiles/test]
 
    :project/dev  {:jvm-opts ["-Dconf=dev-config.edn" ]
-                  :dependencies [[binaryage/devtools "1.0.2"]
-                                 [pjstadig/humane-test-output "0.10.0"]
+                  :dependencies [[pjstadig/humane-test-output "0.10.0"]
                                  [prone "2020-01-17"]
                                  [ring/ring-devel "1.8.2"]
                                  [ring/ring-mock "0.4.0"]]
                   :plugins      [[com.jakemccrary/lein-test-refresh "0.24.1"]
                                  [jonase/eastwood "0.3.5"]] 
                   
-                  :source-paths ["env/dev/clj" "env/dev/cljc" "env/dev/cljs"]
+                  :source-paths ["env/dev/clj" ]
                   :resource-paths ["env/dev/resources"]
                   :repl-options {:init-ns user
                                  :timeout 120000}
