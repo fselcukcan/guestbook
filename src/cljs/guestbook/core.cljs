@@ -103,20 +103,30 @@
 
 (defn home []
   (let [messages (rf/subscribe [:messages/list])]
-    (rf/dispatch [:app/initialize])
-    (get-messages)
     (fn []
-      (if @(rf/subscribe [:messages/loading?])
-        [:div>div.row>div.sapn12>h3
-         "Loading Messages..."]
-        [:div.content>div.columns.is-centered>div.column.is-two-thirds
-         [:div.columns>div.column
-          [:h3 "Messages"]
-          [message-list messages]]
-         [:div.columns>div.column
-          [message-form]]]))))
+      [:div.content>div.columns.is-centered>div.column.is-two-thirds
+       (if @(rf/subscribe [:messages/loading?])
+         [:h3 "Loading Messages..."]
+         [:div
+          [:div.columns>div.column
+           [:h3 "Messages"]
+           [message-list messages]]
+          [:div.columns>div.column
+           [message-form]]])])))
 
 
-(dom/render
- [home]
- (.getElementById js/document "content"))
+; to not reset our app state's db unnecessarily everytime we call rf/dispatch [:app/initialize]) we separate our "initialization logic" from our "rendering logic"
+
+(defn ^:dev/after-load mount-components []
+  (rf/clear-subscription-cache!)
+  (.log js/console "Mounting Components...")
+  (dom/render [#'home] (.getElementById js/document "content"))
+  (.log js/console "Components Mounted!"))
+
+(defn init! []
+  (.log js/console "Initializing App..")
+  (rf/dispatch [:app/initialize])
+  (get-messages)
+  (mount-components))
+
+(init!)
