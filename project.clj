@@ -68,7 +68,7 @@
   {:uberjar {:omit-source true
              :aot :all
              :uberjar-name "guestbook.jar"
-             :source-paths ["env/prod/clj" ]
+             :source-paths ["env/prod/clj" "env/prod/cljc" "env/prod/cljs"]
              :resource-paths ["env/prod/resources"]}
 
    :dev           [:project/dev :profiles/dev]
